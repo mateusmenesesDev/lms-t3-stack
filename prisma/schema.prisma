@@ -6,15 +6,12 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
+    provider = "cockroachdb"
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
+model User {
+    id        String   @id
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    @@index([name])
 }

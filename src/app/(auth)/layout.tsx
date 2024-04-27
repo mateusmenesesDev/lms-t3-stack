@@ -2,7 +2,12 @@ import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
 
+import { Toaster } from "sonner";
+import { ClerkProvider } from "@clerk/nextjs";
+
 import { TRPCReactProvider } from "~/trpc/react";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,10 +25,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const user = auth();
+  if (user.sessionId) {
+    redirect("/");
+  }
+
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable} text-red-500`}>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+      <body className={`font-sans ${inter.variable}`}>
+        <ClerkProvider>
+          <Toaster />
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
